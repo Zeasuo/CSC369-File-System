@@ -1,0 +1,27 @@
+#!/usr/bin/python
+
+# ./ext2_concurrent_ln_sl <image>
+
+import subprocess
+import sys
+import os
+import time
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        sys.exit(-1)
+
+    img = sys.argv[1]
+
+    server = subprocess.Popen(["./ext2kmfs",
+                               "../../" + img],
+                              cwd="./out/bin")
+
+    time.sleep(0.1)
+
+    client = subprocess.Popen(["./test_ln_sl"],
+                              cwd="./out/tests")
+    client.wait()
+    server.terminate()
+
+    sys.exit(client.returncode)

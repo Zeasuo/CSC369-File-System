@@ -1,0 +1,31 @@
+#!/usr/bin/python
+
+# ./ext2_ln_sl <image> <src> <dst>
+
+import subprocess
+import sys
+import os
+import time
+
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        sys.exit(-1)
+
+    img = sys.argv[1]
+    src = sys.argv[2]
+    dst = sys.argv[3]
+
+    server = subprocess.Popen(["./ext2kmfs",
+                               "../../" + img],
+                              cwd="./out/bin/")
+
+    time.sleep(0.1)
+
+    client = subprocess.Popen(["./ext2umfs_ln_sl",
+                               src,
+                               dst],
+                              cwd="./out/util/")
+    client.wait()
+    server.terminate()
+
+    sys.exit(client.returncode)
